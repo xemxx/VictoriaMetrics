@@ -27,7 +27,7 @@ var (
 //
 // See https://graphite.readthedocs.io/en/stable/render_api.html
 func RenderHandler(startTime time.Time, at *auth.Token, w http.ResponseWriter, r *http.Request) error {
-	deadline := searchutil.GetDeadlineForQuery(r, startTime)
+	ctx := searchutil.GetContextForQuery(r, startTime)
 	format := r.FormValue("format")
 	if format != "json" {
 		return fmt.Errorf("unsupported format=%q; supported values: json", format)
@@ -105,7 +105,7 @@ func RenderHandler(startTime time.Time, at *auth.Token, w http.ResponseWriter, r
 			endTime:             untilTime,
 			storageStep:         storageStep,
 			denyPartialResponse: denyPartialResponse,
-			deadline:            deadline,
+			ctx:                 ctx,
 			currentTime:         startTime,
 			xFilesFactor:        xFilesFactor,
 			etfs:                etfs,
